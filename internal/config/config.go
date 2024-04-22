@@ -9,10 +9,19 @@ import (
 )
 
 type Config struct {
-	Env    string `yaml:"env"`
-	Grpc   GRPC
-	Secret string `yaml:"secret"`
-	DevDB  string `yaml:"dev_db"`
+	Env      string `yaml:"env"`
+	Grpc     GRPC
+	Secret   string `yaml:"secret"`
+	DevDB    string `yaml:"dev_db"`
+	ConfigDB DB
+}
+
+type DB struct {
+	Host   string `yaml:"POSTGRES_HOST"`
+	UserDb string `yaml:"POSTGRES_USER"`
+	DbName string `yaml:"POSTGRES_DB"`
+	PassDb string `yaml:"POSTGRES_PASSWORD"`
+	PortDb string `yaml:"POSTGRES_PORT"`
 }
 
 type GRPC struct {

@@ -6,7 +6,7 @@ storage_path:
   POSTGRES_DB: "postgre"
   POSTGRES_PORT: "5432"
 grpc:
-  port: 44044
+  port: 44045
   timeout: 1h
 
 dev_db: "./dev.db"
