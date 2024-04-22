@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package matches;
+
+option go_package = "dota_tracker.matches.v1;matches";
+
+service MatchesServer {
+  rpc MatchesCurrentUser(MatchesCurrentUserRequest) returns (MatchesCurrentUserResponse);
+}
+
+message MatchesCurrentUserResponse {
+  repeated int64 MatchesId = 1;
+}
+
+message MatchesCurrentUserRequest {
+  int64 IdUser = 1;
+}
+
+
