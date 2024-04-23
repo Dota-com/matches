@@ -12,6 +12,7 @@ import (
 type Matches struct {
 	log             *slog.Logger
 	matchesProvider MatchesProvider
+	matchesForKafka MatchesKafkaProvider
 }
 
 func New(
@@ -27,6 +28,10 @@ type MatchesProvider interface {
 	MatchesDb(ctx context.Context, log *slog.Logger, id int64) (*domain.MatchesIds, error)
 }
 
+type MatchesKafkaProvider interface {
+	MatchesForApi(ctx context.Context, log *slog.Logger, id int64) (bool, error)
+}
+
 // MatchesUser По айди пользователя получаем все айди.
 // Проверяем на то, что айдишник передан, если он есть возвращаем списком все матчи
 func (m *Matches) MatchesUser(ctx context.Context, id int64) ([]int64, error) {
@@ -40,6 +45,16 @@ func (m *Matches) MatchesUser(ctx context.Context, id int64) ([]int64, error) {
 			return nil, fmt.Errorf("матчи пользователя %d не найдены", id)
 		}
 	}
-	log.Info("Матчи пользователя", id, " получены")
-	return matchesId.IdsMatches, nil
+	log.Info("Матчи пользователя", id, " получены из базы")
+
+	if len(matchesId.IdsMatches) != 0 {
+		return matchesId.IdsMatches, nil
+	}
+
+	_, err = m.matchesForKafka.MatchesForApi(ctx, log, id)
+	if err != nil {
+		log.Warn("Ошибка получения матчей в кафке")
+		return nil, fmt.Errorf("ошибка получения матчей в кафке")
+	}
+	return nil, err
 }

@@ -3,6 +3,7 @@ package appgrpc
 import (
 	"fmt"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 	"log/slog"
 	matches_server "matches/internal/grpc/matches"
 	"net"
@@ -17,7 +18,7 @@ type App struct {
 func New(log *slog.Logger, port int) *App {
 	grpcService := grpc.NewServer()
 	matches_server.RegisterMatchesServer(grpcService)
-
+	reflection.Register(grpcService)
 	return &App{
 		log:  log,
 		port: port,
