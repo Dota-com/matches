@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	_ "github.com/lib/pq"
 	"log"
 	"log/slog"
 	"matches/internal/config"
@@ -20,9 +21,12 @@ type Storage struct {
 }
 
 func New(storagePath config.DB) (*Storage, error) {
-	connDb := fmt.Sprintf(storagePath.UserDb + ":" + storagePath.PassDb + "@" + storagePath.Host + ":" + storagePath.PortDb + "/" + storagePath.DbName)
+	connDb := storagePath.UserDb + ":" + storagePath.PassDb + "@" + storagePath.Host + ":" + storagePath.PortDb + "/" + storagePath.DbName
 
 	db, err := sql.Open("postgres", connDb)
+	if err != nil {
+		panic("Ошибка соединения с базой " + connDb)
+	}
 
 	defer func() {
 		if err := db.Close(); err != nil {
@@ -32,7 +36,7 @@ func New(storagePath config.DB) (*Storage, error) {
 
 	if err = db.Ping(); err != nil {
 		log.Fatal("Ошибка базы ", err)
-		return nil, fmt.Errorf("%s: %w", "postgre", err)
+		return nil, fmt.Errorf("%s: %s", "postgre", err)
 	}
 
 	return &Storage{db: db}, nil

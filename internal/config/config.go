@@ -13,7 +13,7 @@ type Config struct {
 	Grpc     GRPC
 	Secret   string `yaml:"secret"`
 	DevDB    string `yaml:"dev_db"`
-	ConfigDB DB
+	ConfigDB DB     `yaml:"storage_path"`
 }
 
 type DB struct {
