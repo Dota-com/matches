@@ -6,6 +6,15 @@ option go_package = "dota_tracker.matches.v1;matches";
 
 service MatchesServer {
   rpc MatchesCurrentUser(MatchesCurrentUserRequest) returns (MatchesCurrentUserResponse);
+  rpc MatchesCurrentMatch(MatchesCurrentMatchRequest) returns (MatchesCurrentMatchResponse);
+}
+
+message MatchesCurrentMatchRequest {
+  int64 MatchId = 1;
+}
+
+message MatchesCurrentMatchResponse {
+  string Info = 1;
 }
 
 message MatchesCurrentUserResponse {
