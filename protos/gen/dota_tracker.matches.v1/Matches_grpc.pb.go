@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MatchesServerClient interface {
 	MatchesCurrentUser(ctx context.Context, in *MatchesCurrentUserRequest, opts ...grpc.CallOption) (*MatchesCurrentUserResponse, error)
+	MatchesCurrentMatch(ctx context.Context, in *MatchesCurrentMatchRequest, opts ...grpc.CallOption) (*MatchesCurrentMatchResponse, error)
 }
 
 type matchesServerClient struct {
@@ -42,11 +43,21 @@ func (c *matchesServerClient) MatchesCurrentUser(ctx context.Context, in *Matche
 	return out, nil
 }
 
+func (c *matchesServerClient) MatchesCurrentMatch(ctx context.Context, in *MatchesCurrentMatchRequest, opts ...grpc.CallOption) (*MatchesCurrentMatchResponse, error) {
+	out := new(MatchesCurrentMatchResponse)
+	err := c.cc.Invoke(ctx, "/matches.MatchesServer/MatchesCurrentMatch", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MatchesServerServer is the server API for MatchesServer service.
 // All implementations must embed UnimplementedMatchesServerServer
 // for forward compatibility
 type MatchesServerServer interface {
 	MatchesCurrentUser(context.Context, *MatchesCurrentUserRequest) (*MatchesCurrentUserResponse, error)
+	MatchesCurrentMatch(context.Context, *MatchesCurrentMatchRequest) (*MatchesCurrentMatchResponse, error)
 	mustEmbedUnimplementedMatchesServerServer()
 }
 
@@ -56,6 +67,9 @@ type UnimplementedMatchesServerServer struct {
 
 func (UnimplementedMatchesServerServer) MatchesCurrentUser(context.Context, *MatchesCurrentUserRequest) (*MatchesCurrentUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method MatchesCurrentUser not implemented")
+}
+func (UnimplementedMatchesServerServer) MatchesCurrentMatch(context.Context, *MatchesCurrentMatchRequest) (*MatchesCurrentMatchResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method MatchesCurrentMatch not implemented")
 }
 func (UnimplementedMatchesServerServer) mustEmbedUnimplementedMatchesServerServer() {}
 
@@ -88,6 +102,24 @@ func _MatchesServer_MatchesCurrentUser_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MatchesServer_MatchesCurrentMatch_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MatchesCurrentMatchRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MatchesServerServer).MatchesCurrentMatch(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/matches.MatchesServer/MatchesCurrentMatch",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MatchesServerServer).MatchesCurrentMatch(ctx, req.(*MatchesCurrentMatchRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MatchesServer_ServiceDesc is the grpc.ServiceDesc for MatchesServer service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -98,6 +130,10 @@ var MatchesServer_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "MatchesCurrentUser",
 			Handler:    _MatchesServer_MatchesCurrentUser_Handler,
+		},
+		{
+			MethodName: "MatchesCurrentMatch",
+			Handler:    _MatchesServer_MatchesCurrentMatch_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -17,6 +17,7 @@ type MatchesApi struct {
 
 type MatchesService interface {
 	MatchesUser(ctx context.Context, id int64) ([]int64, error)
+	CurrentMatch(ctx context.Context, id int64) (string, error)
 }
 
 func RegisterMatchesServer(server *grpc.Server) {
@@ -44,4 +45,20 @@ func (m *MatchesApi) MatchesCurrentUser(
 	}
 
 	return &matches.MatchesCurrentUserResponse{MatchesId: matchesUser}, nil
+}
+
+func (m *MatchesApi) MatchesCurrentMatch(
+	//TODO Когда будет готова апишка получения матчей нужно продумать как вытягивать данные
+	ctx context.Context,
+	r *matches.MatchesCurrentMatchRequest) (*matches.MatchesCurrentMatchResponse, error) {
+	if r.GetMatchId() == 0 {
+		return nil, status.Error(codes.InvalidArgument, "Отсутствует id матча")
+	}
+
+	rs, err := m.matchesUser.CurrentMatch(ctx, r.GetMatchId())
+	if err != nil {
+		return nil, status.Error(codes.Internal, "Матч не найден")
+	}
+
+	return &matches.MatchesCurrentMatchResponse{Info: rs}, nil
 }
