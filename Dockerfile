@@ -8,5 +8,9 @@ RUN go mod download && go mod verify
 
 COPY . ./
 
+CMD cd test && go test
+
+
+
 
 
