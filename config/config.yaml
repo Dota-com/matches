@@ -9,5 +9,10 @@ grpc:
   port: 44045
   timeout: 1h
 
+tarantool:
+  HOST: "127.0.0.1:3301"
+  USER: "admin"
+  PASS: "pass"
+
 dev_db: "./dev.db"
 secret: "dasdasdd"

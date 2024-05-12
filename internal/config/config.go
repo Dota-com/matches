@@ -9,11 +9,12 @@ import (
 )
 
 type Config struct {
-	Env      string `yaml:"env"`
-	Grpc     GRPC
-	Secret   string `yaml:"secret"`
-	DevDB    string `yaml:"dev_db"`
-	ConfigDB DB     `yaml:"storage_path"`
+	Env       string    `yaml:"env"`
+	Secret    string    `yaml:"secret"`
+	DevDB     string    `yaml:"dev_db"`
+	ConfigDB  DB        `yaml:"storage_path"`
+	Tarantool TARANTOOL `yaml:"tarantool.go"`
+	Grpc      GRPC
 }
 
 type DB struct {
@@ -22,6 +23,12 @@ type DB struct {
 	DbName string `yaml:"POSTGRES_DB"`
 	PassDb string `yaml:"POSTGRES_PASSWORD"`
 	PortDb string `yaml:"POSTGRES_PORT"`
+}
+
+type TARANTOOL struct {
+	Host string `yaml:"HOST"`
+	User string `yaml:"USER"`
+	Pass string `yaml:"PASS"`
 }
 
 type GRPC struct {
