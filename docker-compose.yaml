@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  matches_mc:
+    build: .
+    container_name: matches_mc
+    depends_on:
+      - db
+    #    restart: always
+    environment:
+      - CONFIG_PATH=./config/dev.yaml
+    command:
+      - cd test
+      - go test
+    ports:
+      - "8010:44044"
+
+  db:
+    image: postgres
+    container_name: db
+    volumes:
+      - ./database/:/var/lib/postgresql/data
+      - ./db/:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_PASSWORD: "123456"
+      POSTGRES_USER: "admin"
+      POSTGRES_DB: "auth"
+    ports:
+      - "5432:5432"
