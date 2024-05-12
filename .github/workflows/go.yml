@@ -18,6 +18,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        if: env.SERVER == "dev"
+        if: env.SERVER == dev
       - name: Compose
         run: docker-compose up
