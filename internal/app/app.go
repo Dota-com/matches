@@ -5,7 +5,7 @@ import (
 	appgrpc "matches/internal/app/app"
 	"matches/internal/config"
 	service_matches "matches/internal/service/matches"
-	storage_matches "matches/internal/storage"
+	storage_matches "matches/internal/storage/tarantool"
 )
 
 type App struct {

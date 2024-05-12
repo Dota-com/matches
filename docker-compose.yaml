@@ -5,18 +5,16 @@ services:
     build: .
     container_name: matches_mc
     depends_on:
-      - db
+      - matches_db
     #    restart: always
     environment:
       - CONFIG_PATH=./config/dev.yaml
-    command:
-      - go test
     ports:
       - "8010:44044"
 
-  db:
+  matches_db:
     image: postgres
-    container_name: db
+    container_name: matches_db
     volumes:
       - ./database/:/var/lib/postgresql/data
       - ./db/:/docker-entrypoint-initdb.d
@@ -26,3 +24,9 @@ services:
       POSTGRES_DB: "auth"
     ports:
       - "5432:5432"
+
+  tarantool:
+    image: tarantool/tarantool
+    container_name: tarantool.go
+    ports:
+      - "3301:3301"

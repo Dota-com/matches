@@ -8,8 +8,8 @@ RUN go mod download && go mod verify
 
 COPY . ./
 
-CMD cd test
-
+#CMD cd test && go test
+CMD go run ./cmd/main.go
 
 
 
