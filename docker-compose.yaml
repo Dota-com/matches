@@ -9,6 +9,8 @@ services:
     #    restart: always
     environment:
       - CONFIG_PATH=./config/dev.yaml
+    command:
+      - go test
     ports:
       - "8010:44044"
 
